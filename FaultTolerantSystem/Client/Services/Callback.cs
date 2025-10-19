@@ -13,12 +13,17 @@ namespace Client.Services
 
         public void SetClient(Client client)
         {
-            _client = client; 
+            _client = client;
         }
 
         public void OnStart()
         {
             _client.OnStart();
+        }
+
+        public void OnMessageReceived(Guid fromClientId, string encryptedMessage)
+        {
+            _client.OnMessageReceived(fromClientId, encryptedMessage);
         }
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-
 namespace Client.Services
 {
     internal class Client
@@ -55,6 +54,26 @@ namespace Client.Services
         public void OnStart()
         {
             _status = ClientStatus.Running;
+        }
+        public void SendMessage(Guid toClientId, string message)
+        {
+            string encrypted = Crypto.Encrypt(message);
+            _serviceClient.SendMessage(_clientId, toClientId, encrypted);
+        }
+        public void OnMessageReceived(Guid fromClientId, string encryptedMessage)
+        {
+            string decrypted = Crypto.Decrypt(encryptedMessage);
+            Console.WriteLine($"Message from {fromClientId}: {decrypted}");
+        }
+        public void ShowClientInfo()
+        {
+            Console.WriteLine("\n┌─────────────────────────────────────────┐");
+            Console.WriteLine("│          CLIENT INFORMATION             │");
+            Console.WriteLine("├─────────────────────────────────────────┤");
+            Console.WriteLine($"│  ID:     {_clientId}  │");
+            Console.WriteLine($"│  Status: {_status,-28} │");
+            Console.WriteLine($"│  Time:   {DateTime.Now,-28:yyyy-MM-dd HH:mm:ss} │");
+            Console.WriteLine("└─────────────────────────────────────────┘\n");
         }
     }
 }

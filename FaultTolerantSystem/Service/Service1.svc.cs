@@ -102,5 +102,13 @@ namespace Service
             if(clientDied)
                 StartClients();
         }
+        public void SendMessage(Guid fromClientId, Guid toClientId, string encryptedMessage)
+        {
+            if (_callbacks.ContainsKey(toClientId))
+            {
+                _callbacks[toClientId].OnMessageReceived(fromClientId, encryptedMessage);
+                System.Diagnostics.Debug.WriteLine($"Message from {fromClientId} sent to {toClientId}");
+            }
+        }
     }
 }

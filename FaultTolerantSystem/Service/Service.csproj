@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="ClientStatus.cs" />
     <Compile Include="ClientData.cs" />
+    <Compile Include="Crypto.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>

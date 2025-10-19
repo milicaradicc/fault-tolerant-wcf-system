@@ -47,6 +47,12 @@ namespace Client.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SetStatus", ReplyAction="http://tempuri.org/IService1/SetStatusResponse")]
         System.Threading.Tasks.Task SetStatusAsync(System.Guid clientId, Client.ServiceReference.ClientStatus status);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService1/SendMessage")]
+        void SendMessage(System.Guid fromClientId, System.Guid toClientId, string encryptedMessage);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService1/SendMessage")]
+        System.Threading.Tasks.Task SendMessageAsync(System.Guid fromClientId, System.Guid toClientId, string encryptedMessage);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -54,6 +60,9 @@ namespace Client.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService1/OnStart")]
         void OnStart();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService1/OnMessageReceived")]
+        void OnMessageReceived(System.Guid fromClientId, string decryptedMessage);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -106,6 +115,14 @@ namespace Client.ServiceReference {
         
         public System.Threading.Tasks.Task SetStatusAsync(System.Guid clientId, Client.ServiceReference.ClientStatus status) {
             return base.Channel.SetStatusAsync(clientId, status);
+        }
+        
+        public void SendMessage(System.Guid fromClientId, System.Guid toClientId, string encryptedMessage) {
+            base.Channel.SendMessage(fromClientId, toClientId, encryptedMessage);
+        }
+        
+        public System.Threading.Tasks.Task SendMessageAsync(System.Guid fromClientId, System.Guid toClientId, string encryptedMessage) {
+            return base.Channel.SendMessageAsync(fromClientId, toClientId, encryptedMessage);
         }
     }
 }
