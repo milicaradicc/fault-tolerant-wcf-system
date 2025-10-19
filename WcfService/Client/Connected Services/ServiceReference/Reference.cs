@@ -9,56 +9,27 @@
 
 namespace ServiceReference
 {
-    using System.Runtime.Serialization;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="CompositeType", Namespace="http://schemas.datacontract.org/2004/07/Service")]
-    public partial class CompositeType : object
-    {
-        
-        private bool BoolValueField;
-        
-        private string StringValueField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool BoolValue
-        {
-            get
-            {
-                return this.BoolValueField;
-            }
-            set
-            {
-                this.BoolValueField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string StringValue
-        {
-            get
-            {
-                return this.StringValueField;
-            }
-            set
-            {
-                this.StringValueField = value;
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference.IService1")]
     public interface IService1
     {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetData", ReplyAction="http://tempuri.org/IService1/GetDataResponse")]
-        System.Threading.Tasks.Task<string> GetDataAsync(int value);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterClient", ReplyAction="http://tempuri.org/IService1/RegisterClientResponse")]
+        System.Threading.Tasks.Task RegisterClientAsync(string clientId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IService1/GetDataUsingDataContractResponse")]
-        System.Threading.Tasks.Task<ServiceReference.CompositeType> GetDataUsingDataContractAsync(ServiceReference.CompositeType composite);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/Heartbeat", ReplyAction="http://tempuri.org/IService1/HeartbeatResponse")]
+        System.Threading.Tasks.Task HeartbeatAsync(string clientId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsWorking", ReplyAction="http://tempuri.org/IService1/MarkAsWorkingResponse")]
+        System.Threading.Tasks.Task MarkAsWorkingAsync(string clientId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsStandby", ReplyAction="http://tempuri.org/IService1/MarkAsStandbyResponse")]
+        System.Threading.Tasks.Task MarkAsStandbyAsync(string clientId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetClientStatus", ReplyAction="http://tempuri.org/IService1/GetClientStatusResponse")]
+        System.Threading.Tasks.Task<string> GetClientStatusAsync(string clientId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
@@ -111,14 +82,29 @@ namespace ServiceReference
         {
         }
         
-        public System.Threading.Tasks.Task<string> GetDataAsync(int value)
+        public System.Threading.Tasks.Task RegisterClientAsync(string clientId)
         {
-            return base.Channel.GetDataAsync(value);
+            return base.Channel.RegisterClientAsync(clientId);
         }
         
-        public System.Threading.Tasks.Task<ServiceReference.CompositeType> GetDataUsingDataContractAsync(ServiceReference.CompositeType composite)
+        public System.Threading.Tasks.Task HeartbeatAsync(string clientId)
         {
-            return base.Channel.GetDataUsingDataContractAsync(composite);
+            return base.Channel.HeartbeatAsync(clientId);
+        }
+        
+        public System.Threading.Tasks.Task MarkAsWorkingAsync(string clientId)
+        {
+            return base.Channel.MarkAsWorkingAsync(clientId);
+        }
+        
+        public System.Threading.Tasks.Task MarkAsStandbyAsync(string clientId)
+        {
+            return base.Channel.MarkAsStandbyAsync(clientId);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetClientStatusAsync(string clientId)
+        {
+            return base.Channel.GetClientStatusAsync(clientId);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
@@ -151,7 +137,7 @@ namespace ServiceReference
         {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IService1))
             {
-                return new System.ServiceModel.EndpointAddress("http://localhost:52606/Service1.svc");
+                return new System.ServiceModel.EndpointAddress("http://localhost:64018/Service1.svc");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

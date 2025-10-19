@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading;
+using System.Web.Services.Description;
 
 namespace Service
 {
@@ -12,22 +14,62 @@ namespace Service
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
-        public string GetData(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+    private static readonly Dictionary<string, DateTime> clientHeartbeats = new Dictionary<string, DateTime>();
+    private static readonly Dictionary<string, string> clientStatus = new Dictionary<string, string>();
+
+        public void RegisterClient(string clientId)
+    {
+        clientHeartbeats[clientId] = DateTime.Now;
+        clientStatus[clientId] = "STANDBY";
+        Console.WriteLine($"Client {clientId} registered.");
+    }
+
+    public void Heartbeat(string clientId)
+    {
+        clientHeartbeats[clientId] = DateTime.Now;
+    }
+
+    public void MarkAsWorking(string clientId)
+    {
+        clientStatus[clientId] = "WORKING";
+    }
+
+    public void MarkAsStandby(string clientId)
+    {
+        clientStatus[clientId] = "STANDBY";
+    }
+
+    public string GetClientStatus(string clientId)
+    {
+        return clientStatus.ContainsKey(clientId) ? clientStatus[clientId] : "UNKNOWN";
+    }
+
+    public static void MonitorClients()
+    {
+        while (true)
         {
-            if (composite == null)
+            foreach (var client in clientHeartbeats.Keys.ToList())
             {
-                throw new ArgumentNullException("composite");
+                if ((DateTime.Now - clientHeartbeats[client]).TotalSeconds > 30)
+                {
+                    Console.WriteLine($"Client {client} is DEAD!");
+                    clientStatus[client] = "DEAD";
+                    ActivateStandby();
+                }
             }
-            if (composite.BoolValue)
+            Thread.Sleep(5000);
+        }
+    }
+
+        private static void ActivateStandby()
+        {
+            var standby = clientStatus.FirstOrDefault(c => c.Value == "STANDBY");
+            if (!standby.Equals(default(KeyValuePair<string, string>)))
             {
-                composite.StringValue += "Suffix";
+                clientStatus[standby.Key] = "WORKING";
+                Console.WriteLine($"Activating standby client: {standby.Key}");
             }
-            return composite;
         }
     }
 }
