@@ -8,7 +8,8 @@ using System.Text;
 
 namespace Service
 {
-    [ServiceContract]
+
+    [ServiceContract(CallbackContract = typeof(ICallback))]
     public interface IService1
     {
 

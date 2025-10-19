@@ -9,19 +9,39 @@ using System.Threading;
 
 namespace Service
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
+        private Dictionary<Guid, ClientData> _clients = new Dictionary<Guid, ClientData>();
+        private readonly Dictionary<Guid, ICallback> _callbacks = new Dictionary<Guid, ICallback>();
+
+        public Service1() {
+            System.Diagnostics.Debug.WriteLine($"Created service");
+        }
         public Guid RegisterClient()
         {
-            throw new NotImplementedException();
+            var callback = OperationContext.Current.GetCallbackChannel<ICallback>();
+            Guid clientId = Guid.NewGuid();
 
+            ClientData clientData = new ClientData(clientId, ClientStatus.Standby, DateTime.Now);
+
+            _clients.Add(clientId, clientData);
+            //TODO save to database
+            _callbacks.Add(clientId, callback);
+
+            System.Diagnostics.Debug.WriteLine($"Registered client {clientId}");
+
+            return clientId;
         }
 
         public void SendHeartbeat(Guid clientId)
         {
-            throw new NotImplementedException();
+            ClientData clientData = _clients[clientId];
+            if (clientData == null)
+                return; //TODO decide if exeption should be thrown
+            clientData.LastHeartbeat = DateTime.Now;
+            _clients[clientId] = clientData; //TODO save to database
+
+            System.Diagnostics.Debug.WriteLine($"Recieved heartbeat from client {clientId}");
         }
     }
 }

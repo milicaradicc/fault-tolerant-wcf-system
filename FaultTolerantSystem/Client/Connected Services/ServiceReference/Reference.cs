@@ -16,34 +16,16 @@ namespace Client.ServiceReference {
     public interface IService1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterClient", ReplyAction="http://tempuri.org/IService1/RegisterClientResponse")]
-        void RegisterClient(string clientId);
+        System.Guid RegisterClient();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterClient", ReplyAction="http://tempuri.org/IService1/RegisterClientResponse")]
-        System.Threading.Tasks.Task RegisterClientAsync(string clientId);
+        System.Threading.Tasks.Task<System.Guid> RegisterClientAsync();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/Heartbeat", ReplyAction="http://tempuri.org/IService1/HeartbeatResponse")]
-        void Heartbeat(string clientId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SendHeartbeat", ReplyAction="http://tempuri.org/IService1/SendHeartbeatResponse")]
+        void SendHeartbeat(System.Guid clientId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/Heartbeat", ReplyAction="http://tempuri.org/IService1/HeartbeatResponse")]
-        System.Threading.Tasks.Task HeartbeatAsync(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsWorking", ReplyAction="http://tempuri.org/IService1/MarkAsWorkingResponse")]
-        void MarkAsWorking(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsWorking", ReplyAction="http://tempuri.org/IService1/MarkAsWorkingResponse")]
-        System.Threading.Tasks.Task MarkAsWorkingAsync(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsStandby", ReplyAction="http://tempuri.org/IService1/MarkAsStandbyResponse")]
-        void MarkAsStandby(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/MarkAsStandby", ReplyAction="http://tempuri.org/IService1/MarkAsStandbyResponse")]
-        System.Threading.Tasks.Task MarkAsStandbyAsync(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetClientStatus", ReplyAction="http://tempuri.org/IService1/GetClientStatusResponse")]
-        string GetClientStatus(string clientId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetClientStatus", ReplyAction="http://tempuri.org/IService1/GetClientStatusResponse")]
-        System.Threading.Tasks.Task<string> GetClientStatusAsync(string clientId);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SendHeartbeat", ReplyAction="http://tempuri.org/IService1/SendHeartbeatResponse")]
+        System.Threading.Tasks.Task SendHeartbeatAsync(System.Guid clientId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -73,44 +55,20 @@ namespace Client.ServiceReference {
                 base(binding, remoteAddress) {
         }
         
-        public void RegisterClient(string clientId) {
-            base.Channel.RegisterClient(clientId);
+        public System.Guid RegisterClient() {
+            return base.Channel.RegisterClient();
         }
         
-        public System.Threading.Tasks.Task RegisterClientAsync(string clientId) {
-            return base.Channel.RegisterClientAsync(clientId);
+        public System.Threading.Tasks.Task<System.Guid> RegisterClientAsync() {
+            return base.Channel.RegisterClientAsync();
         }
         
-        public void Heartbeat(string clientId) {
-            base.Channel.Heartbeat(clientId);
+        public void SendHeartbeat(System.Guid clientId) {
+            base.Channel.SendHeartbeat(clientId);
         }
         
-        public System.Threading.Tasks.Task HeartbeatAsync(string clientId) {
-            return base.Channel.HeartbeatAsync(clientId);
-        }
-        
-        public void MarkAsWorking(string clientId) {
-            base.Channel.MarkAsWorking(clientId);
-        }
-        
-        public System.Threading.Tasks.Task MarkAsWorkingAsync(string clientId) {
-            return base.Channel.MarkAsWorkingAsync(clientId);
-        }
-        
-        public void MarkAsStandby(string clientId) {
-            base.Channel.MarkAsStandby(clientId);
-        }
-        
-        public System.Threading.Tasks.Task MarkAsStandbyAsync(string clientId) {
-            return base.Channel.MarkAsStandbyAsync(clientId);
-        }
-        
-        public string GetClientStatus(string clientId) {
-            return base.Channel.GetClientStatus(clientId);
-        }
-        
-        public System.Threading.Tasks.Task<string> GetClientStatusAsync(string clientId) {
-            return base.Channel.GetClientStatusAsync(clientId);
+        public System.Threading.Tasks.Task SendHeartbeatAsync(System.Guid clientId) {
+            return base.Channel.SendHeartbeatAsync(clientId);
         }
     }
 }
