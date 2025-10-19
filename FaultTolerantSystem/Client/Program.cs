@@ -59,43 +59,12 @@ namespace Client
                             {
                                 string content = string.Join(" ", tokens.Skip(2));
                                 client.SendMessage(recipientId, content);
-                                ShowSuccess($"Message dispatched to {recipientId}");
+                                ShowSuccess($"Message sent to {recipientId}");
                             }
                             else
                             {
                                 ShowError("Invalid recipient ID format");
                             }
-                            break;
-
-                        case "whisper":
-                        case "w":
-                            if (tokens.Length < 3)
-                            {
-                                ShowError("Usage: whisper <recipient-id> <secret message>");
-                                break;
-                            }
-
-                            if (Guid.TryParse(tokens[1], out Guid whisperId))
-                            {
-                                string secretMsg = string.Join(" ", tokens.Skip(2));
-                                client.SendMessage(whisperId, $"[WHISPER] {secretMsg}");
-                                Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.WriteLine($"   *whispered to {whisperId}*");
-                                Console.ResetColor();
-                            }
-                            else
-                            {
-                                ShowError("Invalid recipient ID format");
-                            }
-                            break;
-
-                        case "shout":
-                            if (tokens.Length < 2)
-                            {
-                                ShowError("Usage: shout <your message>");
-                                break;
-                            }
-                            ShowWarning("Broadcast feature not yet implemented");
                             break;
 
                         case "commands":
@@ -147,7 +116,6 @@ namespace Client
             Console.WriteLine("├─────────────────────────────────────────────────────┤");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("│  msg <id> <text>      Send a message                │");
-            Console.WriteLine("│  whisper <id> <text>  Send a private whisper        │");
             Console.WriteLine("│  info                 Show client information        │");
             Console.WriteLine("│  clear                Clear the console              │");
             Console.WriteLine("│  commands             Show this help menu            │");
