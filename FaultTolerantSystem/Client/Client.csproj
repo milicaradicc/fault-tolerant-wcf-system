@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Callback.cs" />
     <Compile Include="Services\Client.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +62,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Connected Services\ServiceReference\Service11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\ServiceReference\Service12.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

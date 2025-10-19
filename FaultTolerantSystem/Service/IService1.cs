@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Web;
 
 namespace Service
 {
@@ -18,11 +20,15 @@ namespace Service
 
         [OperationContract]
         void SendHeartbeat(Guid clientId);
+
+        [OperationContract]
+        void SetStatus(Guid clientId, ClientStatus status);
     }
 
     public interface ICallback
     {
-       // [OperationContract(IsOneWay = true)]
+        [OperationContract(IsOneWay = true)]
+        void OnStart();
         
     }
 

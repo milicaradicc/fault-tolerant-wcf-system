@@ -9,10 +9,25 @@
 //------------------------------------------------------------------------------
 
 namespace Client.ServiceReference {
+    using System.Runtime.Serialization;
     
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ClientStatus", Namespace="http://schemas.datacontract.org/2004/07/Service")]
+    public enum ClientStatus : int {
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Running = 0,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Standby = 1,
+        
+        [System.Runtime.Serialization.EnumMemberAttribute()]
+        Dead = 2,
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference.IService1")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ServiceReference.IService1", CallbackContract=typeof(Client.ServiceReference.IService1Callback))]
     public interface IService1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/RegisterClient", ReplyAction="http://tempuri.org/IService1/RegisterClientResponse")]
@@ -26,6 +41,19 @@ namespace Client.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SendHeartbeat", ReplyAction="http://tempuri.org/IService1/SendHeartbeatResponse")]
         System.Threading.Tasks.Task SendHeartbeatAsync(System.Guid clientId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SetStatus", ReplyAction="http://tempuri.org/IService1/SetStatusResponse")]
+        void SetStatus(System.Guid clientId, Client.ServiceReference.ClientStatus status);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/SetStatus", ReplyAction="http://tempuri.org/IService1/SetStatusResponse")]
+        System.Threading.Tasks.Task SetStatusAsync(System.Guid clientId, Client.ServiceReference.ClientStatus status);
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface IService1Callback {
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IService1/OnStart")]
+        void OnStart();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -34,25 +62,26 @@ namespace Client.ServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class Service1Client : System.ServiceModel.ClientBase<Client.ServiceReference.IService1>, Client.ServiceReference.IService1 {
+    public partial class Service1Client : System.ServiceModel.DuplexClientBase<Client.ServiceReference.IService1>, Client.ServiceReference.IService1 {
         
-        public Service1Client() {
+        public Service1Client(System.ServiceModel.InstanceContext callbackInstance) : 
+                base(callbackInstance) {
         }
         
-        public Service1Client(string endpointConfigurationName) : 
-                base(endpointConfigurationName) {
+        public Service1Client(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName) : 
+                base(callbackInstance, endpointConfigurationName) {
         }
         
-        public Service1Client(string endpointConfigurationName, string remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public Service1Client(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, string remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public Service1Client(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(endpointConfigurationName, remoteAddress) {
+        public Service1Client(System.ServiceModel.InstanceContext callbackInstance, string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, endpointConfigurationName, remoteAddress) {
         }
         
-        public Service1Client(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(binding, remoteAddress) {
+        public Service1Client(System.ServiceModel.InstanceContext callbackInstance, System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(callbackInstance, binding, remoteAddress) {
         }
         
         public System.Guid RegisterClient() {
@@ -69,6 +98,14 @@ namespace Client.ServiceReference {
         
         public System.Threading.Tasks.Task SendHeartbeatAsync(System.Guid clientId) {
             return base.Channel.SendHeartbeatAsync(clientId);
+        }
+        
+        public void SetStatus(System.Guid clientId, Client.ServiceReference.ClientStatus status) {
+            base.Channel.SetStatus(clientId, status);
+        }
+        
+        public System.Threading.Tasks.Task SetStatusAsync(System.Guid clientId, Client.ServiceReference.ClientStatus status) {
+            return base.Channel.SetStatusAsync(clientId, status);
         }
     }
 }

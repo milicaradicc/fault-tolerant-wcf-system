@@ -3,9 +3,11 @@ using Client.ServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+
 
 namespace Client.Services
 {
@@ -13,11 +15,17 @@ namespace Client.Services
     {
         private Service1Client _serviceClient;
         private Timer _heartbeatTimer;
+        private Timer _statusTimer;
         private Guid _clientId;
+        private ClientStatus _status = ClientStatus.Standby;
+        
+        public Client(Service1Client serviceClient)
+        {
+            _serviceClient = serviceClient;
+        }
 
         public void Start() 
         {
-            _serviceClient = new Service1Client();
             _serviceClient.Open();
 
             Console.WriteLine("Sending registration to server");
@@ -29,10 +37,24 @@ namespace Client.Services
             _heartbeatTimer = new Timer(10000);
             _heartbeatTimer.Elapsed += (s, e) =>
             {
-                Console.WriteLine($"Sending heartbeat to server");
                 _serviceClient.SendHeartbeat(_clientId);
             };
             _heartbeatTimer.Start();
+
+            _statusTimer = new Timer(5000);
+            _statusTimer.Elapsed += (s, e) =>
+            {
+                if (_status == ClientStatus.Running)
+                {
+                    Console.WriteLine($"Working... {DateTime.Now}");
+                }
+            };
+            _statusTimer.Start();
+        }
+
+        public void OnStart()
+        {
+            _status = ClientStatus.Running;
         }
     }
 }
