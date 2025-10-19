@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="Service1" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:56420/Service1.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:56420/Service1.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IService1_RegisterClient_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterClient" />
+  </wsdl:message>
+  <wsdl:message name="IService1_RegisterClient_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterClientResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_Heartbeat_InputMessage">
+    <wsdl:part name="parameters" element="tns:Heartbeat" />
+  </wsdl:message>
+  <wsdl:message name="IService1_Heartbeat_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HeartbeatResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_MarkAsWorking_InputMessage">
+    <wsdl:part name="parameters" element="tns:MarkAsWorking" />
+  </wsdl:message>
+  <wsdl:message name="IService1_MarkAsWorking_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MarkAsWorkingResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_MarkAsStandby_InputMessage">
+    <wsdl:part name="parameters" element="tns:MarkAsStandby" />
+  </wsdl:message>
+  <wsdl:message name="IService1_MarkAsStandby_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MarkAsStandbyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_GetClientStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClientStatus" />
+  </wsdl:message>
+  <wsdl:message name="IService1_GetClientStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClientStatusResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IService1">
+    <wsdl:operation name="RegisterClient">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/RegisterClient" message="tns:IService1_RegisterClient_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/RegisterClientResponse" message="tns:IService1_RegisterClient_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Heartbeat">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/Heartbeat" message="tns:IService1_Heartbeat_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/HeartbeatResponse" message="tns:IService1_Heartbeat_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MarkAsWorking">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/MarkAsWorking" message="tns:IService1_MarkAsWorking_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/MarkAsWorkingResponse" message="tns:IService1_MarkAsWorking_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MarkAsStandby">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/MarkAsStandby" message="tns:IService1_MarkAsStandby_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/MarkAsStandbyResponse" message="tns:IService1_MarkAsStandby_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClientStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetClientStatus" message="tns:IService1_GetClientStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetClientStatusResponse" message="tns:IService1_GetClientStatus_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IService1" type="tns:IService1">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="RegisterClient">
+      <soap:operation soapAction="http://tempuri.org/IService1/RegisterClient" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Heartbeat">
+      <soap:operation soapAction="http://tempuri.org/IService1/Heartbeat" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarkAsWorking">
+      <soap:operation soapAction="http://tempuri.org/IService1/MarkAsWorking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MarkAsStandby">
+      <soap:operation soapAction="http://tempuri.org/IService1/MarkAsStandby" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClientStatus">
+      <soap:operation soapAction="http://tempuri.org/IService1/GetClientStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <wsdl:port name="BasicHttpBinding_IService1" binding="tns:BasicHttpBinding_IService1">
+      <soap:address location="http://localhost:56420/Service1.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
