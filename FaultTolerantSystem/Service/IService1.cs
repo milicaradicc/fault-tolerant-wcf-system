@@ -23,15 +23,19 @@ namespace Service
 
         [OperationContract]
         void SetStatus(Guid clientId, ClientStatus status);
+
+        [OperationContract(IsOneWay = true)]
+        void SendMessage(Guid fromClientId, Guid toClientId, string encryptedMessage);
+
     }
 
     public interface ICallback
     {
         [OperationContract(IsOneWay = true)]
         void OnStart();
-        
+
+        [OperationContract(IsOneWay = true)]
+        void OnMessageReceived(Guid fromClientId, string decryptedMessage);
     }
-
-
 
 }
