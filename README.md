@@ -308,9 +308,7 @@ public class Log
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [ForeignKey("ClientData")]
     public Guid? ClientId { get; set; }
-    public virtual ClientData ClientData { get; set; }
 
     [Required]
     public LogType Type { get; set; }
