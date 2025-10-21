@@ -27,20 +27,9 @@ namespace Service
         {
             using (var db = new ServiceDbContext())
             {
-                db.Clients.RemoveRange(db.Clients);
+                db.Clients.RemoveRange(db.Clients.ToList());
                 db.SaveChanges();
             }
-        }
-        
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Log>()
-                .HasOptional(l => l.ClientData)
-                .WithMany()
-                .HasForeignKey(l => l.ClientId)
-                .WillCascadeOnDelete(false);
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

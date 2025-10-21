@@ -41,8 +41,8 @@ namespace Service.Clients
         {
             using (ServiceDbContext context = new ServiceDbContext())
             {
-                return context.Clients
-                    .Where(client =>
+                return context.Clients.ToList()
+                    .Where(client => 
                         (DateTime.Now - client.LastHeartbeat).TotalMilliseconds > clientInactivityTreshold
                         && client.Status != ClientStatus.Dead).ToList();
             }
