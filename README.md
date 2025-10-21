@@ -101,13 +101,6 @@ MaxRunningClients = 2                // Concurrent active clients
 - Resets client data on service startup via `ResetDatabase()` method
 - Configures optional relationship between Log and ClientData
 
-**Connection String:**
-```
-Data Source=(LocalDb)\MSSQLLocalDB;
-Initial Catalog=ServiceDb;
-Integrated Security=True;
-```
-
 ### 4. Repository Pattern
 
 **ClientRepository (Data Access Layer):**
@@ -131,7 +124,6 @@ public class Log
     public LogType Type { get; set; }
     public string Message { get; set; }
     public DateTime Timestamp { get; set; }
-    public ClientData ClientData { get; set; }  // Navigation property
 }
 ```
 
