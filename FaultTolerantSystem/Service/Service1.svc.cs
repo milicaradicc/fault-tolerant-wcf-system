@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -6,21 +7,25 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Timers;
+using Service.Clients;
+using Service.Logs;
 
 namespace Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class Service1 : IService1
     {
-        private Dictionary<Guid, ClientData> _clients = new Dictionary<Guid, ClientData>();
-        private readonly Dictionary<Guid, ICallback> _callbacks = new Dictionary<Guid, ICallback>();
-        private Timer _checkTimer;
+        private readonly ConcurrentDictionary<Guid, ICallback> _callbacks = new ConcurrentDictionary<Guid, ICallback>();
+        private readonly Timer _checkTimer;
         private const int CheckInterval = 5000;
         private const int ClientInactivityTreshold = 30000;
         private const int MaxRunningClients = 2;
-        
+        private static readonly object StartLock = new object();
+
 
         public Service1() {
+            ServiceDbContext.ResetDatabase();
+
             _checkTimer = new Timer(CheckInterval);
             _checkTimer.Elapsed+=CheckClients;
             _checkTimer.Start();
@@ -33,10 +38,10 @@ namespace Service
 
             ClientData clientData = new ClientData(clientId, ClientStatus.Standby, DateTime.Now);
 
-            _clients.Add(clientId, clientData);
-            //TODO save to database
-            _callbacks.Add(clientId, callback);
+            ClientRepository.AddClient(clientData);
+            _callbacks.TryAdd(clientId, callback);
 
+            LogRepository.AddLog(new Log(clientId, LogType.ClientRegistered, $"Registered client {clientId}"));
             System.Diagnostics.Debug.WriteLine($"Registered client {clientId}");
 
             StartClients();
@@ -46,13 +51,18 @@ namespace Service
 
         public void SendHeartbeat(Guid clientId)
         {
-            ClientData clientData = _clients[clientId];
+            ClientData clientData = ClientRepository.GetClient(clientId);
             if (clientData == null)
-                return; //TODO decide if exeption should be thrown
+            {
+                LogRepository.AddLog(new Log(clientId, LogType.Error, $"Received heartbeat from unknown client {clientId}"));
+                System.Diagnostics.Debug.WriteLine($"Received heartbeat from unknown client {clientId}");
+                return;
+            }
             clientData.LastHeartbeat = DateTime.Now;
-            _clients[clientId] = clientData; //TODO save to database
+            ClientRepository.UpdateClient(clientId, clientData);
 
-            System.Diagnostics.Debug.WriteLine($"Recieved heartbeat from client {clientId}");
+            LogRepository.AddLog(new Log(clientId, LogType.HeartbeatReceived, $"Received heartbeat from client {clientId}"));
+            System.Diagnostics.Debug.WriteLine($"Received heartbeat from client {clientId}");
         }
 
         public void SetStatus(Guid clientId, ClientStatus status)
@@ -60,22 +70,26 @@ namespace Service
             throw new NotImplementedException();
         }
 
-        public void StartClients() 
+        public void StartClients()
         {
-            var runningClients = _clients.Values.Where(c => c.Status == ClientStatus.Running).ToList();
-            var standbyClients = _clients.Values.Where(c => c.Status == ClientStatus.Standby).ToList();
-
-            while (runningClients.Count() < MaxRunningClients)
+            lock (StartLock)
             {
-                var client = standbyClients.FirstOrDefault();
-                if (client == null) return;
-                runningClients.Append(client);
-                standbyClients.Remove(client);
-                client.Status = ClientStatus.Running;
-                //TODO update in database
-                _clients[client.Id] = client;
-                _callbacks[client.Id].OnStart();
-                System.Diagnostics.Debug.WriteLine($"Started client {client.Id}");
+                var runningClients = ClientRepository.GetClientsWithStatus(ClientStatus.Running);
+                var standbyClients = ClientRepository.GetClientsWithStatus(ClientStatus.Standby);
+
+                while (runningClients.Count() < MaxRunningClients)
+                {
+                    var client = standbyClients.FirstOrDefault();
+                    if (client == null) return;
+                    runningClients.Append(client);
+                    standbyClients.Remove(client);
+                    client.Status = ClientStatus.Running;
+                    ClientRepository.UpdateClient(client.Id, client);
+                    _callbacks[client.Id].OnStart();
+
+                    LogRepository.AddLog(new Log(client.Id, LogType.ClientStarted, $"Started client {client.Id}"));
+                    System.Diagnostics.Debug.WriteLine($"Started client {client.Id}");
+                }
             }
         }
 
@@ -83,32 +97,26 @@ namespace Service
         {
             bool clientDied = false;
 
-            foreach (KeyValuePair<Guid, ClientData> kvp in _clients)
+            foreach (ClientData client in ClientRepository.GetAllInactiveClients(ClientInactivityTreshold))
             {
-                Guid clientId = kvp.Key;
-                ClientData client = kvp.Value;
+                LogRepository.AddLog(new Log(client.Id, LogType.ClientDied, $"Client {client.Id} died."));
+                System.Diagnostics.Debug.WriteLine($"Client {client.Id} died.");
 
-                var timeSinceLastHeartbeat = DateTime.Now - client.LastHeartbeat;
-
-                if (timeSinceLastHeartbeat.TotalMilliseconds > ClientInactivityTreshold && client.Status != ClientStatus.Dead)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Client {clientId} died.");
-
-                    client.Status = ClientStatus.Dead;
-                    clientDied = true;
-                }
+                client.Status = ClientStatus.Dead;
+                ClientRepository.UpdateClient(client.Id, client);
+                clientDied = true;
             }
 
             if(clientDied)
                 StartClients();
         }
+
         public void SendMessage(Guid fromClientId, Guid toClientId, string encryptedMessage)
         {
-            if (_callbacks.ContainsKey(toClientId))
-            {
-                _callbacks[toClientId].OnMessageReceived(fromClientId, encryptedMessage);
-                System.Diagnostics.Debug.WriteLine($"Message from {fromClientId} sent to {toClientId}");
-            }
+            if (!_callbacks.TryGetValue(toClientId, out var callback)) return;
+            callback.OnMessageReceived(fromClientId, encryptedMessage);
+            LogRepository.AddLog(new Log(fromClientId, LogType.SentMessage, $"Message from {fromClientId} sent to {toClientId}"));
+            System.Diagnostics.Debug.WriteLine($"Message from {fromClientId} sent to {toClientId}");
         }
     }
 }

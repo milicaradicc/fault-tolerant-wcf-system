@@ -116,10 +116,10 @@ namespace Client
             Console.WriteLine("├─────────────────────────────────────────────────────┤");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("│  msg <id> <text>      Send a message                │");
-            Console.WriteLine("│  info                 Show client information        │");
-            Console.WriteLine("│  clear                Clear the console              │");
-            Console.WriteLine("│  commands             Show this help menu            │");
-            Console.WriteLine("│  exit                 Disconnect and quit            │");
+            Console.WriteLine("│  info                 Show client information       │");
+            Console.WriteLine("│  clear                Clear the console             │");
+            Console.WriteLine("│  commands             Show this help menu           │");
+            Console.WriteLine("│  exit                 Disconnect and quit           │");
             Console.ResetColor();
             Console.WriteLine("└─────────────────────────────────────────────────────┘\n");
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace Service
+namespace Service.Clients
 {
     [DataContract]
     public enum ClientStatus
